@@ -18,6 +18,8 @@ const checkGame = async url => {
     .catch(err => {
       console.log(err)
     })
+
+  console.log(html)
   const selector = 'table.prices-table td img[alt~=🥇]'
   const cheapest = $(selector, html).parent().parent()
 
