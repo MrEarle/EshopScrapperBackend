@@ -27,7 +27,7 @@ const checkGame = async url => {
   let html = await page.content()
   // html =
 
-  // console.log(html)
+  console.log(html)
   const selector = 'table.prices-table td img[alt~=🥇]'
   const cheapest = $(selector, html).parent().parent()
 
