@@ -15,7 +15,13 @@ const cleanPrice = priceHtml => {
 
 const checkGame = async url => {
 
-  const browser = await pupeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false })
+  const browser = await pupeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      `--user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko`
+    ]
+  })
   const page = await browser.newPage()
   await page.goto(url)
   let html = await page.content()
@@ -26,7 +32,7 @@ const checkGame = async url => {
   const cheapest = $(selector, html).parent().parent()
 
   const priceHtml = $('.price-value', cheapest)
-  const price = +(cleanPrice(priceHtml).replace(/( |\n|\$)/g, ''))
+  const price = +(cleanPrice(priceHtml).replace(/( |\n|\$|\.)/g, ''))
 
   return {
     url: url,

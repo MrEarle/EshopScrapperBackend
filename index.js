@@ -4,10 +4,20 @@ const gameRouter = require('./helpers/scrapper')
 
 /* App Configuration */
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8080
 
 /* Middlewares */
 app.use(cors())
+app.use((req, res, next) => {
+  try {
+    next()
+  } catch (err) {
+    res.json({
+      status: 500,
+      error: err
+    })
+  }
+})
 
 /* Routes */
 app.use('/check', gameRouter)
@@ -17,5 +27,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log('Running')
+  console.log('Running on port', PORT)
 })
