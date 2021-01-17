@@ -1,5 +1,6 @@
 const express = require('express')
 const fetch = require('node-fetch')
+const pupeteer = require('puppeteer')
 const $ = require('cheerio')
 
 const gameRouter = express.Router()
@@ -13,13 +14,14 @@ const cleanPrice = priceHtml => {
 }
 
 const checkGame = async url => {
-  const html = await fetch(url, { method: 'GET' })
-    .then(res => res.text())
-    .catch(err => {
-      console.log(err)
-    })
 
-  console.log(html)
+  const browser = await pupeteer.launch({ headless: false })
+  const page = await browser.newPage()
+  await page.goto(url)
+  let html = await page.content()
+  // html =
+
+  // console.log(html)
   const selector = 'table.prices-table td img[alt~=🥇]'
   const cheapest = $(selector, html).parent().parent()
 
