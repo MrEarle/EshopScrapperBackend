@@ -15,7 +15,7 @@ const cleanPrice = priceHtml => {
 
 const checkGame = async url => {
 
-  const browser = await pupeteer.launch({ headless: false })
+  const browser = await pupeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false })
   const page = await browser.newPage()
   await page.goto(url)
   let html = await page.content()
