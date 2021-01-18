@@ -36,7 +36,7 @@ const gameRouter = express.Router()
 
 const cleanPrice = priceHtml => {
   let discounted = $('.discounted', priceHtml)
-  if (discounted) {
+  if (discounted && discounted.length) {
     return discounted[0].children[2].data
   }
   return priceHtml.text()
@@ -45,7 +45,6 @@ const cleanPrice = priceHtml => {
 const checkGame = async url => {
   const html = await getGameHTML(url)
 
-  console.log(html)
   const selector = 'table.prices-table td img[alt~=🥇]'
   const cheapest = $(selector, html).parent().parent()
 
@@ -58,13 +57,17 @@ const checkGame = async url => {
   }
 }
 
-gameRouter.get('/', async (req, res) => {
+gameRouter.get('/', async (req, res, next) => {
   const { url } = req.query
 
-  res.json({
-    status: 200,
-    result: await checkGame(url)
-  })
+  try {
+    res.json({
+      status: 200,
+      result: await checkGame(url)
+    })
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = gameRouter

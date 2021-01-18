@@ -8,15 +8,11 @@ const PORT = process.env.PORT || 8080
 
 /* Middlewares */
 app.use(cors())
-app.use((req, res, next) => {
-  try {
-    next()
-  } catch (err) {
-    res.json({
-      status: 500,
-      error: err
-    })
-  }
+app.use((err, req, res, next) => {
+  res.json({
+    status: 500,
+    error: err
+  })
 })
 
 /* Routes */
