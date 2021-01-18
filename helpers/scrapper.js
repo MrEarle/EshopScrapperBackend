@@ -1,40 +1,34 @@
-const express = require('express')
 const $ = require('cheerio')
-const request = require('request');
+const request = require('request')
 
-const username = "mrearle",
-  apiKey = "dlSFFT0sjP7ESJGN8C1ZHlqpO",
-  url = 'https://eshop-prices.com/games/5359-hyrule-warriors-age-of-calamity?currency=CLP',
-  auth = "Basic " + Buffer.from(username + ":" + apiKey).toString("base64");
-
-const getGameHTML = async url => {
+const getGameHTML = async (url) => {
+  const username = process.env.SCRAPBOT_API_USER,
+    apiKey = process.env.SCRAPBOT_API_KEY,
+    auth = 'Basic ' + Buffer.from(username + ':' + apiKey).toString('base64')
   return new Promise((resolve, reject) => {
     request(
       {
         method: 'POST',
         url: 'http://api.scraping-bot.io/scrape/raw-html',
         json: {
-          url: url
+          url: url,
         },
         headers: {
           Accept: 'application/json',
-          Authorization: auth
+          Authorization: auth,
         },
       },
       function (error, response, body) {
         if (error) {
-          console.log(error)
-          reject()
+          reject(error)
         }
         resolve(body)
       }
-    );
+    )
   })
 }
 
-const gameRouter = express.Router()
-
-const cleanPrice = priceHtml => {
+const cleanPrice = (priceHtml) => {
   let discounted = $('.discounted', priceHtml)
   if (discounted && discounted.length) {
     return discounted[0].children[2].data
@@ -42,32 +36,21 @@ const cleanPrice = priceHtml => {
   return priceHtml.text()
 }
 
-const checkGame = async url => {
+const checkGame = async (url) => {
   const html = await getGameHTML(url)
 
   const selector = 'table.prices-table td img[alt~=🥇]'
   const cheapest = $(selector, html).parent().parent()
 
   const priceHtml = $('.price-value', cheapest)
-  const price = +(cleanPrice(priceHtml).replace(/( |\n|\$|\.)/g, ''))
+  const price = +cleanPrice(priceHtml).replace(/( |\n|\$|\.)/g, '')
 
   return {
     url: url,
-    price
+    price,
   }
 }
 
-gameRouter.get('/', async (req, res, next) => {
-  const { url } = req.query
-
-  try {
-    res.json({
-      status: 200,
-      result: await checkGame(url)
-    })
-  } catch (err) {
-    next(err)
-  }
-})
-
-module.exports = gameRouter
+module.exports = {
+  checkGame,
+}
