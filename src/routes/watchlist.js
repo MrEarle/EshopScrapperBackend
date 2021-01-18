@@ -7,13 +7,13 @@ const watchlistSchema = {
   properties: {
     url: {
       type: 'string',
-      required: true
+      required: true,
     },
     name: {
       type: 'string',
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 }
 
 const watchlistRouter = express.Router()
@@ -23,7 +23,7 @@ watchlistRouter.get('/', async (req, res) => {
   const result = await req.ctx.orm.Watchlist.findAndCountAll({ limit, offset })
   res.json({
     status: 200,
-    result
+    result,
   })
 })
 
@@ -34,7 +34,7 @@ watchlistRouter.post('/', async (req, res) => {
   if (!gameId) {
     res.json({
       status: 400,
-      error: "Invalid Eshop URL"
+      error: 'Invalid Eshop URL',
     })
     return
   }
@@ -43,12 +43,12 @@ watchlistRouter.post('/', async (req, res) => {
     const entry = await req.ctx.orm.Watchlist.create({ url, name, gameId })
     res.json({
       status: 200,
-      result: entry
+      result: entry,
     })
   } catch (err) {
     res.json({
       status: 500,
-      error: err
+      error: err,
     })
   }
 })

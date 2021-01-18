@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 const config = {
   default: {
@@ -20,13 +20,17 @@ const config = {
     extend: 'default',
     use_env_variable: 'DATABASE_URL',
   },
-};
+}
 
 Object.keys(config).forEach((configKey) => {
-  const configValue = config[configKey];
+  const configValue = config[configKey]
   if (configValue.extend) {
-    config[configKey] = Object.assign({}, config[configValue.extend], configValue);
+    config[configKey] = Object.assign(
+      {},
+      config[configValue.extend],
+      configValue
+    )
   }
-});
+})
 
-module.exports = config;
+module.exports = config

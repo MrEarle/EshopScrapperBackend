@@ -1,7 +1,7 @@
-const gameRouter = require("./routes/checkGame");
-const watchlistRouter = require("./routes/watchlist");
+const gameRouter = require('./routes/checkGame')
+const watchlistRouter = require('./routes/watchlist')
 
 module.exports = {
   '/check': gameRouter,
-  '/watchlist': watchlistRouter
+  '/watchlist': watchlistRouter,
 }

@@ -1,8 +1,9 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackAssetPipeline = require('webpack-asset-pipeline');
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const WebpackAssetPipeline = require('webpack-asset-pipeline')
 
-const developmentMode = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+const developmentMode =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 
 module.exports = {
   mode: developmentMode ? 'development' : 'production',
@@ -13,9 +14,7 @@ module.exports = {
   output: {
     publicPath: '/assets/',
     path: path.join(__dirname, 'build', 'assets'),
-    filename: developmentMode
-      ? '[name].js'
-      : '[name]-[hash].js',
+    filename: developmentMode ? '[name].js' : '[name]-[hash].js',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.css', '.scss'],
@@ -32,9 +31,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)(\?v=.+)?$/i,
         loader: 'file-loader',
         options: {
-          name: developmentMode
-            ? '[name].[ext]'
-            : '[name]-[hash].[ext]',
+          name: developmentMode ? '[name].[ext]' : '[name]-[hash].[ext]',
         },
       },
       {
@@ -54,4 +51,4 @@ module.exports = {
     }),
     new WebpackAssetPipeline(),
   ],
-};
+}

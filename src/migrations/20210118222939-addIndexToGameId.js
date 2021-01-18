@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -10,7 +10,7 @@ module.exports = {
      */
     return queryInterface.addIndex('Watchlists', {
       fields: ['gameId'],
-      unique: true
+      unique: true,
     })
   },
 
@@ -21,6 +21,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    return queryInterface.removeColumn('Watchlists', 'gameId');
-  }
-};
+    return queryInterface.removeColumn('Watchlists', 'gameId')
+  },
+}
