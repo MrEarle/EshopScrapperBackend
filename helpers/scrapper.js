@@ -1,7 +1,36 @@
 const express = require('express')
-const fetch = require('node-fetch')
-const pupeteer = require('puppeteer')
 const $ = require('cheerio')
+const request = require('request');
+
+const username = "mrearle",
+  apiKey = "dlSFFT0sjP7ESJGN8C1ZHlqpO",
+  url = 'https://eshop-prices.com/games/5359-hyrule-warriors-age-of-calamity?currency=CLP',
+  auth = "Basic " + Buffer.from(username + ":" + apiKey).toString("base64");
+
+const getGameHTML = async url => {
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        method: 'POST',
+        url: 'http://api.scraping-bot.io/scrape/raw-html',
+        json: {
+          url: url
+        },
+        headers: {
+          Accept: 'application/json',
+          Authorization: auth
+        },
+      },
+      function (error, response, body) {
+        if (error) {
+          console.log(error)
+          reject()
+        }
+        resolve(body)
+      }
+    );
+  })
+}
 
 const gameRouter = express.Router()
 
@@ -14,18 +43,7 @@ const cleanPrice = priceHtml => {
 }
 
 const checkGame = async url => {
-
-  const browser = await pupeteer.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      `--user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko`
-    ]
-  })
-  const page = await browser.newPage()
-  await page.goto(url)
-  let html = await page.content()
-  // html =
+  const html = await getGameHTML(url)
 
   console.log(html)
   const selector = 'table.prices-table td img[alt~=🥇]'
