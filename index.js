@@ -1,40 +1,21 @@
+/* eslint no-console: "off" */
 if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 
-const express = require('express')
-const cors = require('cors')
-const orm = require('./models')
-const gameRouter = require('./routes/checkGame')
+const app = require('./src/app');
+const db = require('./src/models');
 
+const PORT = process.env.PORT || 3000;
 
-
-/* App Configuration */
-const app = express()
-const PORT = process.env.PORT || 8080
-const developmentMode = app.env === 'development';
-
-
-/* Middlewares */
-
-// add ORM to context
-app.use((req, res, next) => {
-  req.ctx.orm = orm
-})
-
-app.use(cors())
-app.use((err, req, res, next) => {
-  res.json({
-    status: 500,
-    error: err,
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection to the database has been established successfully.');
+    app.listen(PORT, (err) => {
+      if (err) {
+        return console.error('Failed', err);
+      }
+      console.log(`Listening on port ${PORT}`);
+      return app;
+    });
   })
-})
-
-/* Routes */
-app.use('/check', gameRouter)
-
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
-
-app.listen(PORT, () => {
-  console.log('Running on port', PORT)
-})
+  .catch(err => console.error('Unable to connect to the database:', err));
