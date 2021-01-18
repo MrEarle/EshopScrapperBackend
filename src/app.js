@@ -1,13 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const jwt = require('express-jwt')
 const orm = require('./models')
 const routes = require('./routes')
 
 /* App Configuration */
 const app = express()
-const PORT = process.env.PORT || 8080
-const developmentMode = app.env === 'development'
 
 /* Middlewares */
 app.use(function (err, req, res, next) {
@@ -56,10 +55,23 @@ app.use((req, res, next) => {
 app.use(cors())
 
 /* Routes */
-Object.entries(routes).forEach(([route, router]) => app.use(route, router))
+Object.entries(routes.free).forEach(([route, router]) => app.use(route, router))
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
+const authedRouter = express.Router()
+// JWT authentication without passthrough (error if not authenticated)
+authedRouter.use(jwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }));
+authedRouter.use(async (req, res, next) => {
+  if (req.user.userId) {
+    req.user = await req.ctx.orm.User.findByPk(req.user.userId);
+  }
+  return next();
 })
+
+Object.entries(routes.authed).forEach(([route, router]) => {
+  authedRouter.use(route, router)
+})
+
+app.use('/authed', authedRouter)
+
 
 module.exports = app
