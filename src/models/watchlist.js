@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Watchlist.init({
+    gameId: {
+      type: DataTypes.INTEGER,
+      unique: true,
+      allowNull: false
+    },
     url: {
       type: DataTypes.STRING,
       unique: true,
@@ -33,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Watchlist',
+    indexes: [{ unique: true, fields: ['gameId'] }]
   });
   return Watchlist;
 };
