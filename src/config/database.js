@@ -18,9 +18,6 @@ const config = {
   },
   production: {
     extend: 'default',
-    dialectOptions: {
-      ssl: true
-    },
     use_env_variable: 'DATABASE_URL',
   },
 }
