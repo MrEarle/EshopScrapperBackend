@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+'use strict'
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Subscription extends Model {
     /**
@@ -14,19 +12,22 @@ module.exports = (sequelize, DataTypes) => {
       Subscription.belongsTo(models.User)
       Subscription.belongsTo(models.Watchlist)
     }
-  };
-  Subscription.init({
-    UserId: DataTypes.INTEGER,
-    WatchlistId: DataTypes.INTEGER,
-    maxPrice: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      min: 0
+  }
+  Subscription.init(
+    {
+      UserId: DataTypes.INTEGER,
+      WatchlistId: DataTypes.INTEGER,
+      maxPrice: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        min: 0,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Subscription',
     }
-  }, {
-    sequelize,
-    modelName: 'Subscription',
-  });
+  )
 
-  return Subscription;
-};
+  return Subscription
+}

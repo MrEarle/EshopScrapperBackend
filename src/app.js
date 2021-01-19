@@ -59,12 +59,12 @@ Object.entries(routes.free).forEach(([route, router]) => app.use(route, router))
 
 const authedRouter = express.Router()
 // JWT authentication without passthrough (error if not authenticated)
-authedRouter.use(jwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }));
+authedRouter.use(jwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] }))
 authedRouter.use(async (req, res, next) => {
   if (req.user.userId) {
-    req.user = await req.ctx.orm.User.findByPk(req.user.userId);
+    req.user = await req.ctx.orm.User.findByPk(req.user.userId)
   }
-  return next();
+  return next()
 })
 
 Object.entries(routes.authed).forEach(([route, router]) => {
@@ -72,6 +72,5 @@ Object.entries(routes.authed).forEach(([route, router]) => {
 })
 
 app.use('/authed', authedRouter)
-
 
 module.exports = app

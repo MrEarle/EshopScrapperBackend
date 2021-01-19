@@ -40,7 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: { args: 'uniqueUsername', msg: 'El nombre se usuario ya está ocupado' },
+        unique: {
+          args: 'uniqueUsername',
+          msg: 'El nombre se usuario ya está ocupado',
+        },
         validate: {
           notEmpty: { msg: 'Debes indicar un nombre de usuario' },
         },

@@ -5,11 +5,11 @@ const watchlistRouter = require('./routes/watchlist')
 
 module.exports = {
   free: {
-    '/user': userRouter
+    '/user': userRouter,
   },
   authed: {
     '/check': gameRouter,
     '/watchlist': watchlistRouter,
-    '/subs': subscriptionRouter
-  }
+    '/subs': subscriptionRouter,
+  },
 }
