@@ -65,7 +65,7 @@ userRouter.post(
     const { username, email, password } = req.body
     try {
       const user = await req.ctx.orm.User.create({ username, email, password })
-      const token = await generateToken(user.id)
+      const token = await generateToken(user.id, user.email)
 
       res.json({
         status: 200,
