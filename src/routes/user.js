@@ -37,7 +37,7 @@ userRouter.post(
     const { email, password } = req.body
     const user = await req.ctx.orm.User.findOne({ where: { email } })
     if (user && (await user.checkPassword(password))) {
-      const token = await generateToken(user.id)
+      const token = await generateToken(user.id, user.email)
       res.json({
         status: 200,
         result: token,
