@@ -27,7 +27,7 @@ watchlistRouter.get('/', async (req, res) => {
   })
 })
 
-watchlistRouter.post('/', async (req, res) => {
+watchlistRouter.post('/', validate({ body: watchlistSchema }), async (req, res) => {
   const { url, name } = req.body
 
   const gameId = validateEshopUrl(url)
