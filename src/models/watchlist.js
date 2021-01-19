@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Watchlist.belongsToMany(models.User, { through: models.Subscription })
     }
   }
   Watchlist.init(
