@@ -1,5 +1,6 @@
 #! /app/.heroku/node/bin/node
 
+const { sendNotification } = require('../src/helpers/fcm')
 const { checkGame } = require('../src/helpers/scrapper')
 const orm = require('../src/models')
 
