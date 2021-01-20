@@ -23,7 +23,7 @@ const sendNotification = async (title, message, to) => {
   }
 
   const res = await fetch("https://fcm.googleapis.com/fcm/send", options)
-    .then(r => r.json())
+    .then(r => r.text())
     .catch(err => console.log(err) || 'Error')
   return res
 }
