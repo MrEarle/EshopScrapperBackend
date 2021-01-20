@@ -8,7 +8,7 @@ module.exports = {
     '/user': userRouter,
   },
   authed: {
-    '/check': gameRouter,
+    // '/check': gameRouter,
     '/watchlist': watchlistRouter,
     '/subs': subscriptionRouter,
   },
