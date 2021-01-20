@@ -14,6 +14,9 @@ const loginUserValidator = {
       type: 'string',
       required: true,
     },
+    device: {
+      type: 'string'
+    }
   },
 }
 
@@ -34,9 +37,15 @@ userRouter.post(
   '/auth',
   validate({ body: loginUserValidator }),
   async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, device } = req.body
+
     const user = await req.ctx.orm.User.findOne({ where: { email } })
     if (user && (await user.checkPassword(password))) {
+      if (device) {
+        user.device = device
+        user.save()
+      }
+
       const token = await generateToken(user.id, user.email)
       res.json({
         status: 200,

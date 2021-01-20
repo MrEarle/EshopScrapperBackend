@@ -56,6 +56,9 @@ module.exports = (sequelize, DataTypes) => {
           len: { args: [6], msg: 'Debes ingresar una contraseña de largo 6' },
         },
       },
+      device: {
+        type: DataTypes.STRING,
+      }
     },
     {
       hooks: {
