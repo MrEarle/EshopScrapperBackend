@@ -23,7 +23,7 @@ const notifier = async () => {
     const { price } = await checkGame(url)
     return Promise.all(users.map(async ({ device, maxPrice }) => {
       if (price <= maxPrice) {
-        return sendNotification(name, `Price: ${price}`, device).then(() => console.log(device))
+        return sendNotification(name, `Price: ${price}`, device)
       }
     }))
   }))

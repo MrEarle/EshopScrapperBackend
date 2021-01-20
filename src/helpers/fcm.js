@@ -24,7 +24,6 @@ const sendNotification = async (title, message, to) => {
 
   const res = await fetch("https://fcm.googleapis.com/fcm/send", options)
     .then(r => r.text())
-    .then(console.log)
     .catch(err => console.log(err) || 'Error')
   return res
 }
