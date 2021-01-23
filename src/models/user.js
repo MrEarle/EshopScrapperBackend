@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       device: {
         type: DataTypes.STRING,
+      },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {

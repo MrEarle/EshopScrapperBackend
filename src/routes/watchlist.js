@@ -30,6 +30,12 @@ watchlistRouter.get('/', async (req, res) => {
 watchlistRouter.post('/', validate({ body: watchlistSchema }), async (req, res) => {
   const { url, name } = req.body
 
+  if (!req.user.isAdmin) {
+    return res.send(403, {
+      error: 'This route is restricted.'
+    })
+  }
+
   const gameId = validateEshopUrl(url)
   if (!gameId) {
     res.json({

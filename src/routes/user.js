@@ -15,7 +15,8 @@ const loginUserValidator = {
       required: true,
     },
     device: {
-      type: 'string'
+      type: 'string',
+      required: false,
     }
   },
 }
@@ -49,7 +50,10 @@ userRouter.post(
       const token = await generateToken(user.id, user.email)
       res.json({
         status: 200,
-        result: token,
+        result: {
+          token,
+          isAdmin: user.isAdmin
+        },
       })
     } else {
       res.json({
@@ -71,15 +75,20 @@ userRouter.post(
       })
     }
 
-    const { username, email, password } = req.body
+    const { username, email, password, device } = req.body
+
+    const body = { username, email, password }
+    if (device) body.device = device
+
     try {
-      const user = await req.ctx.orm.User.create({ username, email, password })
+      const user = await req.ctx.orm.User.create(body)
       const token = await generateToken(user.id, user.email)
 
       res.json({
         status: 200,
         result: {
           token,
+          isAdmin: user.isAdmin
         },
       })
     } catch (err) {
