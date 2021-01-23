@@ -7,18 +7,16 @@ const loginUserValidator = {
   properties: {
     email: {
       type: 'string',
-      required: true,
       format: 'email',
     },
     password: {
       type: 'string',
-      required: true,
     },
-    device: {
-      type: 'string',
-      required: false,
-    }
+    // device: {
+    //   type: 'string',
+    // }
   },
+  required: ['email', 'password']
 }
 
 const signUpValidator = {
@@ -30,6 +28,7 @@ const signUpValidator = {
       required: true,
     },
   },
+  required: ['email', 'password', 'username']
 }
 
 const userRouter = express.Router()

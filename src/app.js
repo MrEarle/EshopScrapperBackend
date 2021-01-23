@@ -9,8 +9,9 @@ const routes = require('./routes')
 const app = express()
 
 /* Middlewares */
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   let responseData
+  console.log(err.message)
 
   if (err.name === 'JsonSchemaValidation') {
     // Log the error however you please
