@@ -19,8 +19,13 @@ const watchlistSchema = {
 const watchlistRouter = express.Router()
 
 watchlistRouter.get('/', async (req, res) => {
-  const { limit, offset } = req.query
-  const result = await req.ctx.orm.Watchlist.findAndCountAll({ limit, offset })
+  const { orm } = req.ctx
+  const { limit, offset, search } = req.query
+
+  const params = { limit: limit || 10, offset: offset || 0 }
+  if (search) params.where = { name: { [orm.Sequelize.Op.iLike]: `%${search}%` } }
+
+  const result = await orm.Watchlist.findAndCountAll(params)
   res.json({
     status: 200,
     result,

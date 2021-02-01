@@ -15,12 +15,18 @@ const subscriptionRouter = express.Router()
 
 subscriptionRouter.get('/', async (req, res) => {
   const user = req.user
+  const { orm } = req.ctx
+  const { limit, offset, search } = req.query
+
+  const params = { limit: limit || 10, offset: offset || 0 }
+  if (search) params.where = { name: { [orm.Sequelize.Op.iLike]: `%${search}%` } }
 
   try {
-    const watchlists = await user.getWatchlists()
+    const watchlists = await user.getWatchlists(params)
+    const count = await user.countWatchlists()
     res.json({
       status: 200,
-      result: { watchlists },
+      result: { count, rows: watchlists },
     })
   } catch (err) {
     res.json({
