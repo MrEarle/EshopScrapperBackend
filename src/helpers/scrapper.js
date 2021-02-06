@@ -19,8 +19,21 @@ const getGameHTML = async (url) => {
         },
       },
       function (error, response, body) {
-        if (error) {
-          reject(error)
+        let json = null
+        try {
+          json = JSON.parse(body)
+        } catch (e) { }
+        if (error || response.statusCode !== 200 || (json && json.error)) {
+          let err
+          if (json && json.error) {
+            err = json.error
+          } else if (error) {
+            err = error
+          } else {
+            err = body
+          }
+          console.log(err)
+          reject(err)
         }
         resolve(body)
       }
