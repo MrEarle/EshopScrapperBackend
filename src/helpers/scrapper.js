@@ -57,6 +57,11 @@ const checkGame = async (url) => {
 
   const priceHtml = $('.price-value', cheapest)
   const price = +cleanPrice(priceHtml).replace(/( |\n|\$|\.)/g, '')
+  if (price === 0) {
+    console.log(`Weird Price Detected:\n\turl: ${url}\n\tprice: ${price}`)
+    console.log(cheapest)
+    console.log(priceHtml)
+  }
 
   return {
     url: url,
