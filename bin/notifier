@@ -20,7 +20,10 @@ const notifier = async () => {
   }))
 
   return Promise.all(checklist.map(async ({ url, name, users }) => {
-    const { price } = await checkGame(url)
+    const { price, result } = await checkGame(url)
+      .then(({ price }) => ({ price, result: true }))
+      .catch(() => ({ result: false }))
+    if (!result) return 'Error when checking game!'
     return Promise.all(users.map(async ({ device, maxPrice }) => {
       if (price <= maxPrice) {
         return sendNotification(name, `Price: ${price}`, device)
