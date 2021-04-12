@@ -1,5 +1,6 @@
 const $ = require('cheerio')
 const request = require('request')
+const fetch = require('node-fetch')
 
 const getGameHTML = async (url) => {
   const username = process.env.SCRAPBOT_API_USER,
@@ -41,6 +42,17 @@ const getGameHTML = async (url) => {
   })
 }
 
+const getGameHTML2 = async (url) => {
+  const html = await fetch(`https://api.scrapingrobot.com?token=${process.env.SCRAPING_ROBOT_API_KEY}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      url,
+      module: "HtmlChromeScraper"
+    })
+  })
+  return html
+}
+
 const cleanPrice = (priceHtml) => {
   let discounted = $('.discounted', priceHtml)
   if (discounted && discounted.length) {
@@ -50,7 +62,7 @@ const cleanPrice = (priceHtml) => {
 }
 
 const checkGame = async (url) => {
-  const html = await getGameHTML(url)
+  const html = await getGameHTML2(url)
 
   const selector = 'table.prices-table td img[alt~=🥇]'
   const cheapest = $(selector, html).parent().parent()
