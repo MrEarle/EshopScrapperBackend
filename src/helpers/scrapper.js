@@ -50,7 +50,8 @@ const getGameHTML2 = async (url) => {
       module: "HtmlChromeScraper"
     })
   })
-  return html
+    .then(res => res.json())
+  return html.result
 }
 
 const cleanPrice = (priceHtml) => {
