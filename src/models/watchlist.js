@@ -35,6 +35,12 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: 'Debes incluir un nombre' },
         },
       },
+      currentPrice: {
+        type: DataTypes.INTEGER,
+      },
+      priceUpdatedAt: {
+        type: DataTypes.DATEONLY,
+      }
     },
     {
       sequelize,
