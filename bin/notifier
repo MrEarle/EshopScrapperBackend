@@ -13,17 +13,29 @@ const notifier = async () => {
     }]
   })
 
-  const checklist = games.map(({ url, name, Users }) => ({
+  const checklist = games.map(({ gameId, url, name, Users }) => ({
+    gameId,
     url,
     name,
     users: Users.map(({ device, Subscription }) => ({ device, maxPrice: Subscription.maxPrice }))
   }))
 
-  return Promise.all(checklist.map(async ({ url, name, users }) => {
+  return Promise.all(checklist.map(async ({ gameId, url, name, users }) => {
     const { price, result } = await checkGame(url)
       .then(({ price }) => ({ price, result: true }))
       .catch(() => ({ result: false }))
     if (!result) return 'Error when checking game!'
+
+    if (!price) return 'Missing Price!'
+
+    await orm.Watchlist.update({
+      currentPrice: price,
+      priceUpdatedAt: Date.now()
+    }, {
+      where: { gameId }
+    })
+
+
     return Promise.all(users.map(async ({ device, maxPrice }) => {
       if (price <= maxPrice) {
         return sendNotification(name, `Price: ${price}`, device)
