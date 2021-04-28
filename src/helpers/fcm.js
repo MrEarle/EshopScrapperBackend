@@ -43,15 +43,7 @@ const sendPushedNotification = async (url, message, pushedId) => {
     })
   }).then(r => r.text())
     .catch(err => console.log(err) || 'Error')
-  console.log(res, {
-    app_key: process.env.PUSHED_APP_KEY,
-    app_secret: process.env.PUSHED_APP_SECRET,
-    content: message,
-    content_type: 'url',
-    content_extra: url,
-    target_type: 'pushed_id',
-    pushed_id: pushedId
-  })
+  console.log(res)
   return res
 }
 

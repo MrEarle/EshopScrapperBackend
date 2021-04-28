@@ -38,7 +38,6 @@ const notifier = async () => {
 
     return Promise.all(users.map(async ({ device, maxPrice, usePushed }) => {
       if (price <= maxPrice) {
-        console.log(`usePushed: ${maxPrice}, ${usePushed}`)
         if (usePushed) {
           return sendPushedNotification(url, `${name}\nPrice: ${price}`, device)
         } else {
