@@ -43,6 +43,7 @@ const sendPushedNotification = async (url, message, pushedId) => {
     }
   }).then(r => r.text())
     .catch(err => console.log(err) || 'Error')
+  console.log(res)
   return res
 }
 
