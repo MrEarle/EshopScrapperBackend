@@ -1,6 +1,7 @@
 const express = require('express')
 const { validate } = require('express-jsonschema')
-const { generateToken } = require('../helpers/jwt')
+const jwt = require('jsonwebtoken')
+const { generateToken, generateRefreshToken } = require('../helpers/jwt')
 
 const loginUserValidator = {
   type: 'object',
@@ -47,10 +48,14 @@ userRouter.post(
       }
 
       const token = await generateToken(user.id, user.email)
+      const refreshToken = await generateRefreshToken(user.id, user.email)
+
+      await user.update({ refreshToken })
       res.json({
         status: 200,
         result: {
           token,
+          refreshToken,
           isAdmin: user.isAdmin
         },
       })
@@ -82,11 +87,15 @@ userRouter.post(
     try {
       const user = await req.ctx.orm.User.create(body)
       const token = await generateToken(user.id, user.email)
+      const refreshToken = await generateRefreshToken(user.id, user.email)
+
+      await user.update({ refreshToken })
 
       res.json({
         status: 200,
         result: {
           token,
+          refreshToken,
           isAdmin: user.isAdmin
         },
       })
@@ -97,6 +106,55 @@ userRouter.post(
         error: 'There was an error creating the user',
       })
     }
+  }
+)
+
+userRouter.post(
+  '/logout',
+  async (req, res) => {
+    console.log('logout')
+    const { token } = req.body
+
+    if (!token) return res.sendStatus(401)
+    let user
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
+      user = await req.ctx.orm.User.findOne({ where: { email: decoded.email } })
+    } catch (err) {
+      res.sendStatus(403)
+      return
+    }
+
+    await user.update({ refreshToken: null })
+
+    res.sendStatus(200)
+  }
+)
+
+userRouter.post(
+  '/token',
+  async (req, res) => {
+    const { token } = req.body
+
+    if (!token) return res.sendStatus(401)
+
+    let user
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
+      user = await req.ctx.orm.User.findOne({ where: { email: decoded.email } })
+    } catch (err) {
+      res.sendStatus(403)
+      return
+    }
+
+    if (user.refreshToken !== token) return res.sendStatus(403)
+
+    const accessToken = await generateToken(user.id, user.email)
+
+    res.json({
+      status: 200,
+      result: { token: accessToken }
+    })
   }
 )
 
