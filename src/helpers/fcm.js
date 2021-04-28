@@ -32,7 +32,7 @@ const sendPushedNotification = async (url, message, pushedId) => {
   const res = await fetch("https://api.pushed.co/1/push", {
     mode: 'cors',
     method: "POST",
-    body: {
+    body: JSON.stringify({
       app_key: process.env.PUSHED_APP_KEY,
       app_secret: process.env.PUSHED_APP_SECRET,
       content: message,
@@ -40,7 +40,7 @@ const sendPushedNotification = async (url, message, pushedId) => {
       content_extra: url,
       target_type: 'pushed_id',
       pushed_id: pushedId
-    }
+    })
   }).then(r => r.text())
     .catch(err => console.log(err) || 'Error')
   console.log(res)
