@@ -1,6 +1,6 @@
 #! /app/.heroku/node/bin/node
 
-const { sendNotification } = require('../src/helpers/fcm')
+const { sendNotification, sendPushedNotification } = require('../src/helpers/fcm')
 const { checkGame } = require('../src/helpers/scrapper')
 const orm = require('../src/models')
 
@@ -17,7 +17,7 @@ const notifier = async () => {
     gameId,
     url,
     name,
-    users: Users.map(({ device, Subscription }) => ({ device, maxPrice: Subscription.maxPrice }))
+    users: Users.map(({ device, Subscription, usePushed }) => ({ device, maxPrice: Subscription.maxPrice, usePushed }))
   }))
 
   return Promise.all(checklist.map(async ({ gameId, url, name, users }) => {
@@ -36,9 +36,13 @@ const notifier = async () => {
     })
 
 
-    return Promise.all(users.map(async ({ device, maxPrice }) => {
+    return Promise.all(users.map(async ({ device, maxPrice, usePushed }) => {
       if (price <= maxPrice) {
-        return sendNotification(name, `Price: ${price}`, device)
+        if (usePushed) {
+          return sendPushedNotification(url, `${name}\nPrice: ${price}`, device)
+        } else {
+          return sendNotification(name, `Price: ${price}`, device)
+        }
       }
     }))
   }))

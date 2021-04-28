@@ -65,6 +65,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       refreshToken: {
         type: DataTypes.STRING,
+      },
+      usePushed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {
