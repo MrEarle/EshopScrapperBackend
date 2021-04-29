@@ -1,4 +1,5 @@
 const gameRouter = require('./routes/checkGame')
+const gameRequestRouter = require('./routes/gameRequest')
 const pushedRouter = require('./routes/pushed')
 const subscriptionRouter = require('./routes/subscription')
 const userRouter = require('./routes/user')
@@ -13,5 +14,6 @@ module.exports = {
     '/watchlist': watchlistRouter,
     '/subs': subscriptionRouter,
     '/pushed': pushedRouter,
+    '/request': gameRequestRouter
   },
 }

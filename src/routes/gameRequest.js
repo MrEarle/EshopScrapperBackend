@@ -125,3 +125,5 @@ gameRequestRouter.get(
     })
   }
 )
+
+module.exports = gameRequestRouter
