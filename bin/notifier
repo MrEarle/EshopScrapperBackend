@@ -20,7 +20,7 @@ const notifier = async () => {
     users: Users.map(({ device, Subscription, usePushed }) => ({ device, maxPrice: Subscription.maxPrice, usePushed }))
   }))
 
-  return Promise.all(checklist.map(async ({ gameId, url, name, users }) => {
+  const notifications = await Promise.all(checklist.map(async ({ gameId, url, name, users }) => {
     const { price, result } = await checkGame(url)
       .then(({ price }) => ({ price, result: true }))
       .catch(() => ({ result: false }))
@@ -35,17 +35,15 @@ const notifier = async () => {
       where: { gameId }
     })
 
-
-    return Promise.all(users.map(async ({ device, maxPrice, usePushed }) => {
+    return users.reduce((acc, { device, maxPrice }) => {
       if (price <= maxPrice) {
-        if (usePushed) {
-          return sendPushedNotification(url, `${name}\nPrice: ${price}`, device)
-        } else {
-          return sendNotification(name, `Price: ${price}`, device)
-        }
+        return [...acc, { name, price, device }]
       }
-    }))
+      return acc
+    }, [])
   }))
+
+  return sendNotification(notifications.reduce((acc, it) => ([...acc, ...it]), []))
 }
 
 notifier().then(() => process.exit())

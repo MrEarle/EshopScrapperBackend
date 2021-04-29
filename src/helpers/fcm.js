@@ -1,6 +1,39 @@
 const fetch = require('node-fetch')
+const { Expo } = require('expo-server-sdk')
 
-const sendNotification = async (title, message, to) => {
+const sendNotification = async (notifications) => {
+  const expo = new Expo()
+
+  const messages = []
+
+  notifications.forEach(({ name, price, device }) => {
+    if (!Expo.isExpoPushToken(device)) {
+      console.error(`Push token ${device} is not a valid Expo push token`)
+      continue
+    }
+
+    messages.push({
+      to: device,
+      sound: 'default',
+      title: name,
+      body: `Price: $${price}`
+      // data
+    })
+  })
+
+  const chunks = expo.chunkPushNotifications(messages)
+
+  return Promise.all(chunks.map(async (chunk) => {
+    try {
+      return expo.sendPushNotificationsAsync(chunk)
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }))
+}
+
+const sendFirebaseNotification = async (title, message, to) => {
   const options = {
     mode: 'cors',
     method: 'POST',
