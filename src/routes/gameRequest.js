@@ -1,6 +1,7 @@
 const express = require('express')
 const { validate } = require('express-jsonschema')
 const { sendOneNotification } = require('../helpers/fcm')
+const { validateEshopUrl } = require('../helpers/validators')
 
 const gameValidator = {
   type: 'object',
