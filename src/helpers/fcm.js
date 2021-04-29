@@ -33,6 +33,28 @@ const sendNotification = async (notifications) => {
   }))
 }
 
+const sendOneNotification = async (device, title, body) => {
+  const expo = new Expo()
+
+  const messages = [{
+    to: device,
+    sound: 'default',
+    title,
+    body
+  }]
+
+  const chunks = expo.chunkPushNotifications(messages)
+
+  return Promise.all(chunks.map(async (chunk) => {
+    try {
+      return expo.sendPushNotificationsAsync(chunk)
+    } catch (err) {
+      console.error(err)
+      return null
+    }
+  }))
+}
+
 const sendFirebaseNotification = async (title, message, to) => {
   const options = {
     mode: 'cors',
@@ -82,5 +104,6 @@ const sendPushedNotification = async (url, message, pushedId) => {
 
 module.exports = {
   sendNotification,
-  sendPushedNotification
+  sendPushedNotification,
+  sendOneNotification
 }
