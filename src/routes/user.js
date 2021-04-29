@@ -125,7 +125,7 @@ userRouter.post(
       return
     }
 
-    await user.update({ refreshToken: null })
+    await user.update({ refreshToken: null, device: null })
 
     res.sendStatus(200)
   }
