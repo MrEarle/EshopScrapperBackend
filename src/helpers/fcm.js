@@ -9,7 +9,7 @@ const sendNotification = async (notifications) => {
   notifications.forEach(({ name, price, device }) => {
     if (!Expo.isExpoPushToken(device)) {
       console.error(`Push token ${device} is not a valid Expo push token`)
-      continue
+      return
     }
 
     messages.push({
