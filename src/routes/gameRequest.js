@@ -101,9 +101,10 @@ gameRequestRouter.post(
         result: entry,
       })
     } catch (err) {
+      console.log(err)
       res.json({
         status: 500,
-        error: err,
+        error: err.message,
       })
     }
   }
