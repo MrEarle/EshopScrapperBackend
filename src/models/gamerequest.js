@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   GameRequest.init({
     url: DataTypes.STRING,
     name: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    UserId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'GameRequest',
