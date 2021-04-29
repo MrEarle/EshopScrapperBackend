@@ -62,7 +62,7 @@ gameRequestRouter.post(
       })
     }
 
-    const { id: requestId } = req.body
+    const { id: requestId } = req.params
 
     try {
       const gameRequest = await req.ctx.orm.GameRequest.findByPk(requestId)
