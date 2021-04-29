@@ -31,7 +31,7 @@ gameRequestRouter.post(
     const user = req.user
 
     try {
-      const gameRequest = await user.createGameRouter({ name, url })
+      const gameRequest = await user.createGameRequest({ name, url })
       res.json({
         status: 200,
         result: {
