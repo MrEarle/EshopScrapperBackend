@@ -129,25 +129,17 @@ gameRequestRouter.post(
       const name = req.body.name || gameRequest.name
       const requestUser = await gameRequest.getUser()
 
-      if (!requestUser) {
-        await gameRequest.destroy()
-        res.json({
-          status: 400,
-          error: 'User does not exist',
-        })
-        return
+      if (requestUser) {
+        await sendOneNotification(
+          requestUser.device,
+          'Game request rejected',
+          `Your request for ${name} has been rejected.`
+        )
       }
-
-      await sendOneNotification(
-        requestUser.device,
-        'Game request rejected',
-        `Your request for ${name} has been rejected.`
-      )
 
       await gameRequest.destroy()
       res.json({
-        status: 200,
-        result: entry,
+        status: 200
       })
     } catch (err) {
       console.log(err)
