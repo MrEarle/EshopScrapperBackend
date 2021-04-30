@@ -77,6 +77,7 @@ gameRequestRouter.post(
           status: 400,
           error: 'User does not exist',
         })
+        return
       }
 
       const gameId = validateEshopUrl(url)
@@ -94,6 +95,53 @@ gameRequestRouter.post(
         requestUser.device,
         'Game request approved!',
         `Your request for ${name} has been approved!`
+      )
+
+      await gameRequest.destroy()
+      res.json({
+        status: 200,
+        result: entry,
+      })
+    } catch (err) {
+      console.log(err)
+      res.json({
+        status: 500,
+        error: err.message,
+      })
+    }
+  }
+)
+
+gameRequestRouter.post(
+  '/reject/:id',
+  validate({ body: approveValidator }),
+  async (req, res) => {
+    if (!req.user.isAdmin) {
+      return res.send(403, {
+        error: 'This route is restricted.'
+      })
+    }
+
+    const { id: requestId } = req.params
+
+    try {
+      const gameRequest = await req.ctx.orm.GameRequest.findByPk(requestId)
+      const name = req.body.name || gameRequest.name
+      const requestUser = await gameRequest.getUser()
+
+      if (!requestUser) {
+        await gameRequest.destroy()
+        res.json({
+          status: 400,
+          error: 'User does not exist',
+        })
+        return
+      }
+
+      await sendOneNotification(
+        requestUser.device,
+        'Game request rejected',
+        `Your request for ${name} has been rejected.`
       )
 
       await gameRequest.destroy()
