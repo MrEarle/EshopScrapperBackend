@@ -32,6 +32,17 @@ const signUpValidator = {
   required: ['email', 'password', 'username']
 }
 
+const signOutValidator = {
+  type: 'object',
+  properties: {
+    token: {
+      type: 'string',
+      required: true,
+    },
+  },
+  required: ['token']
+}
+
 const userRouter = express.Router()
 
 userRouter.post(
@@ -111,6 +122,7 @@ userRouter.post(
 
 userRouter.post(
   '/logout',
+  validate({ body: signOutValidator }),
   async (req, res) => {
     console.log('logout')
     const { token } = req.body
