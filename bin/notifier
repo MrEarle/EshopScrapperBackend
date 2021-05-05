@@ -8,7 +8,6 @@ const notifier = async () => {
   const games = await orm.Watchlist.findAll({
     include: [{
       model: orm.User,
-      where: { device: { [orm.Sequelize.Op.not]: null } },
       through: { attributes: ['maxPrice'] }
     }]
   })
@@ -36,7 +35,7 @@ const notifier = async () => {
     })
 
     return users.reduce((acc, { device, maxPrice }) => {
-      if (price <= maxPrice) {
+      if (device && price <= maxPrice) {
         return [...acc, { name, price, device }]
       }
       return acc
