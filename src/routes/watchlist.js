@@ -25,7 +25,7 @@ watchlistRouter.get('/', async (req, res) => {
   const params = {
     limit: limit || 10,
     offset: offset || 0,
-    order: ['name', 'ASC']
+    order: [['name', 'ASC']]
   }
   if (search) params.where = { name: { [orm.Sequelize.Op.iLike]: `%${search}%` } }
 
