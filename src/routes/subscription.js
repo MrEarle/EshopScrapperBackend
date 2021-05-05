@@ -18,7 +18,11 @@ subscriptionRouter.get('/', async (req, res) => {
   const { orm } = req.ctx
   const { limit, offset, search } = req.query
 
-  const params = { limit: limit || 10, offset: offset || 0 }
+  const params = {
+    limit: limit || 10,
+    offset: offset || 0,
+    order: [['name', 'ASC']]
+  }
   if (search) params.where = { name: { [orm.Sequelize.Op.iLike]: `%${search}%` } }
 
   try {
